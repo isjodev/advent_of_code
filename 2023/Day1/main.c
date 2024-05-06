@@ -6,9 +6,9 @@
 #define FILENAME "input.txt"
 
 typedef struct {
-  char *line;
   int length;
   int converted_numeric_value;
+  char line[];
 } line_info_t;
 
 typedef struct node_t {
@@ -64,10 +64,16 @@ void deallocate(node_t **root) {
 int main() {
   FILE *fPtr = fopen(FILENAME, "r");
   node_t *root = NULL;
+  int bufferLength = 256;
+  char buffer[bufferLength];
 
   if (!fPtr) {
     fprintf(stderr, "Failed to open file\n");
     exit(EXIT_FAILURE);
+  }
+
+  while (fgets(buffer, bufferLength, fPtr)) {
+    printf("%s %lu\n", buffer, strlen(buffer) - 1);
   }
 
   print_list(&root);
