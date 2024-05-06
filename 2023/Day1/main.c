@@ -17,11 +17,11 @@ typedef struct node_t {
 } node_t;
 
 // Function prototypes
-void insert_end(node_t **root, line_info_t *);
+void insert_end(node_t **root, line_info_t);
 void print_list(node_t **root);
 void deallocate(node_t **root);
 
-void insert_end(node_t **root, line_info_t *value) {
+void insert_end(node_t **root, line_info_t value) {
   node_t *new_node = malloc(sizeof(node_t));
 
   if (new_node == NULL) {
@@ -29,7 +29,7 @@ void insert_end(node_t **root, line_info_t *value) {
   }
 
   new_node->next = NULL;
-  new_node->line_t = value;
+  new_node->line_t = &value;
 
   if (*root == NULL) {
     *root = new_node;
@@ -64,21 +64,21 @@ void deallocate(node_t **root) {
 int main() {
   FILE *fPtr = fopen(FILENAME, "r");
   node_t *root = NULL;
-  char line[256];
+  size_t read;
+  char *read_line;
+  size_t len = 0;
 
   if (!fPtr) {
     fprintf(stderr, "Failed to open file\n");
     exit(EXIT_FAILURE);
   }
 
-  while (fgets(line, sizeof(line), fPtr)) {
-    line_info_t current = {};
+  while ((read = getline(&read_line, &len, fPtr)) != -1) {
+    node_t *new_node = malloc(sizeof(node_t));
 
-    current.line = line;
-    current.length = sizeof(line) - 1;
-    current.converted_numeric_value = 0;
-
-    insert_end(&root, &current);
+    new_node->line_t->line = read_line;
+    new_node->line_t->length = len;
+    new_node->line_t->converted_numeric_value = 0;
   }
 
   print_list(&root);
