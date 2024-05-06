@@ -64,21 +64,10 @@ void deallocate(node_t **root) {
 int main() {
   FILE *fPtr = fopen(FILENAME, "r");
   node_t *root = NULL;
-  size_t read;
-  char *read_line;
-  size_t len = 0;
 
   if (!fPtr) {
     fprintf(stderr, "Failed to open file\n");
     exit(EXIT_FAILURE);
-  }
-
-  while ((read = getline(&read_line, &len, fPtr)) != -1) {
-    node_t *new_node = malloc(sizeof(node_t));
-
-    new_node->line_t->line = read_line;
-    new_node->line_t->length = len;
-    new_node->line_t->converted_numeric_value = 0;
   }
 
   print_list(&root);
