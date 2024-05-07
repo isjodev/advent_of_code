@@ -5,55 +5,52 @@
 
 #define FILENAME "input.txt"
 
-typedef struct {
-  int length;
-  int converted_numeric_value;
-  char line[];
-} line_info_t;
+typedef struct Node {
+  struct {
+    char *line;
+    int len;
+    int conv_num_val;
+  } line_val;
+  struct Node *next;
+} Node;
 
-typedef struct node_t {
-  line_info_t *line_t;
-  struct node_t *next;
-} node_t;
-
-// Function prototypes
-void insert_end(node_t **root, line_info_t);
-void print_list(node_t **root);
-void deallocate(node_t **root);
-
-void insert_end(node_t **root, line_info_t value) {
-  node_t *new_node = malloc(sizeof(node_t));
+void insert_end(Node **root, char *line, int len, int val) {
+  Node *new_node = malloc(sizeof(Node));
 
   if (new_node == NULL) {
     exit(EXIT_FAILURE);
   }
 
   new_node->next = NULL;
-  new_node->line_t = &value;
+
+  new_node->line_val.line = line;
+  new_node->line_val.len = len;
+  new_node->line_val.conv_num_val = 0;
 
   if (*root == NULL) {
     *root = new_node;
     return;
   }
 
-  node_t *curr = *root;
+  Node *curr = *root;
   while (curr->next != NULL) {
     curr = curr->next;
   }
+
   curr->next = new_node;
 }
 
-void print_list(node_t **root) {
-  for (node_t *curr = *root; curr != NULL; curr = curr->next) {
-    printf("%s %d %d\n", curr->line_t->line, curr->line_t->length,
-           curr->line_t->converted_numeric_value);
+void print_list(Node **root) {
+  for (Node *curr = *root; curr != NULL; curr = curr->next) {
+    printf("%s %d %d\n", curr->line_val.line, curr->line_val.len,
+           curr->line_val.conv_num_val);
   }
 }
 
-void deallocate(node_t **root) {
-  node_t *curr = *root;
+void deallocate(Node **root) {
+  Node *curr = *root;
   while (curr != NULL) {
-    node_t *aux = curr;
+    Node *aux = curr;
     curr = curr->next;
     free(aux);
   }
@@ -62,22 +59,16 @@ void deallocate(node_t **root) {
 
 // Main
 int main() {
-  FILE *fPtr = fopen(FILENAME, "r");
-  node_t *root = NULL;
-  int bufferLength = 256;
-  char buffer[bufferLength];
+  char const *const fileName = FILENAME;
+  FILE *fPtr = fopen(fileName, "r");
+  char line[256];
+  Node *root = NULL;
 
-  if (!fPtr) {
-    fprintf(stderr, "Failed to open file\n");
-    exit(EXIT_FAILURE);
-  }
-
-  while (fgets(buffer, bufferLength, fPtr)) {
-    printf("%s %lu\n", buffer, strlen(buffer) - 1);
+  while (fgets(line, 256, fPtr)) {
+    insert_end(&root, line, strlen(line) - 1, 0);
   }
 
   print_list(&root);
   deallocate(&root);
-
   return 0;
 }
