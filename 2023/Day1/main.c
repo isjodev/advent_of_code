@@ -31,29 +31,12 @@ int process_line(char *line) {
   char *ptr_1 = line;
   char *ptr_2 = ptr_1 + length - 1;
   int val = 1;
-  char num[2];
 
-  while (ptr_1 != ptr_2) {
-    if (isdigit(*ptr_1)) {
-      // val *= atoi(ptr_1);
-      num[0] = *ptr_1;
-      break;
-    }
-
-    if (isdigit(*ptr_2)) {
-      // val += atoi(ptr_2);
-      num[1] = *ptr_2;
-      break;
-    }
-    ptr_1++;
-    --ptr_2;
-  }
-
-  val = atoi(num);
   return val;
 }
 
 int main() {
+  // TODO: Get the correct answer...
   char const *const fileName = FILENAME;
   FILE *fPtr = fopen(fileName, "r");
   char buf[256];
@@ -66,6 +49,7 @@ int main() {
     total += line_val;
   }
 
+  // 55017 actual
   printf("%d\n", total);
   return 0;
 }
