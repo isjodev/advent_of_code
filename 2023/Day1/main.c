@@ -1,20 +1,15 @@
-#include <stdbool.h>
+#include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define FILENAME "input.txt"
 
 typedef struct Node {
-  struct {
-    char *line;
-    int len;
-    int conv_num_val;
-  } line_val;
+  char *line;
   struct Node *next;
 } Node;
 
-void insert_end(Node **root, char *line, int len, int val) {
+void insert_end(Node **root, char *value) {
   Node *new_node = malloc(sizeof(Node));
 
   if (new_node == NULL) {
@@ -22,10 +17,7 @@ void insert_end(Node **root, char *line, int len, int val) {
   }
 
   new_node->next = NULL;
-
-  new_node->line_val.line = line;
-  new_node->line_val.len = len;
-  new_node->line_val.conv_num_val = 0;
+  new_node->line = value;
 
   if (*root == NULL) {
     *root = new_node;
@@ -40,13 +32,6 @@ void insert_end(Node **root, char *line, int len, int val) {
   curr->next = new_node;
 }
 
-void print_list(Node **root) {
-  for (Node *curr = *root; curr != NULL; curr = curr->next) {
-    printf("%s %d %d\n", curr->line_val.line, curr->line_val.len,
-           curr->line_val.conv_num_val);
-  }
-}
-
 void deallocate(Node **root) {
   Node *curr = *root;
   while (curr != NULL) {
@@ -54,21 +39,45 @@ void deallocate(Node **root) {
     curr = curr->next;
     free(aux);
   }
+
   *root = NULL;
 }
 
-// Main
+void print_list(Node **root) {
+  for (Node *curr = *root; curr != NULL; curr = curr->next) {
+    printf("%s\n", curr->line);
+  }
+}
+
+int read_line(FILE *f, char *buffer, size_t len) {
+  memset(buffer, 0, len);
+
+  for (int i = 0; i < len; i++) {
+    int c = fgetc(f);
+
+    if (!feof(f)) {
+      if (c == '\r') {
+        buffer[i] = 0;
+      } else if (c == '\n') {
+        buffer[i] = 0;
+        return i + 1;
+      } else {
+        buffer[i] = c;
+      }
+    }
+  }
+  return -1;
+}
+
 int main() {
   char const *const fileName = FILENAME;
   FILE *fPtr = fopen(fileName, "r");
-  char line[256];
-  Node *root = NULL;
+  char buf[256];
 
-  while (fgets(line, 256, fPtr)) {
-    insert_end(&root, line, strlen(line) - 1, 0);
+  while (read_line(fPtr, buf, 256) != -1) {
+    char *line = buf;
+    printf("%s\n", line);
   }
 
-  print_list(&root);
-  deallocate(&root);
   return 0;
 }
