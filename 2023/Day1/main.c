@@ -1,5 +1,8 @@
+#include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define FILENAME "input.txt"
 
@@ -23,7 +26,32 @@ int read_line(FILE *f, char *buffer, size_t len) {
   return -1;
 }
 
-int process_line(char *line) { return 1; }
+int process_line(char *line) {
+  int length = strlen(line);
+  char *ptr_1 = line;
+  char *ptr_2 = ptr_1 + length - 1;
+  int val = 1;
+  char num[2];
+
+  while (ptr_1 != ptr_2) {
+    if (isdigit(*ptr_1)) {
+      // val *= atoi(ptr_1);
+      num[0] = *ptr_1;
+      break;
+    }
+
+    if (isdigit(*ptr_2)) {
+      // val += atoi(ptr_2);
+      num[1] = *ptr_2;
+      break;
+    }
+    ptr_1++;
+    --ptr_2;
+  }
+
+  val = atoi(num);
+  return val;
+}
 
 int main() {
   char const *const fileName = FILENAME;
