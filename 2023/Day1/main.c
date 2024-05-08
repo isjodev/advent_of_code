@@ -6,6 +6,7 @@
 
 #define FILENAME "input.txt"
 
+// Read fPtr into char[256] buffer, return -1 on error.
 int read_line(FILE *f, char *buffer, size_t len) {
   memset(buffer, 0, len);
 
@@ -26,30 +27,67 @@ int read_line(FILE *f, char *buffer, size_t len) {
   return -1;
 }
 
-int process_line(char *line) {
-  int length = strlen(line);
-  char *ptr_1 = line;
-  char *ptr_2 = ptr_1 + length - 1;
-  int val = 1;
+// Cast a char to an int and subtract 48 (ascii value of 0) to determine
+// decimal value.
+int get_numeric_value(char *line_idx) { return (int)*line_idx - 48; }
 
-  return val;
+// Process each line, and return the combined value of the first
+// and last integers of each line.
+int process_line(char *line) {
+  // Length of string, subtract one to get index of last character.
+  int string_len = strlen(line);
+  int first_numeric_value = 0;
+  int second_numeric_value = 0;
+
+  // Get first numeric value from string.
+  for (int i = 0; i < string_len; i++) {
+    if (isdigit(line[i]) > 0) {
+      first_numeric_value = get_numeric_value(&line[i]);
+      break;
+    }
+  }
+
+  // Get second numeric value from string.
+  for (int j = string_len - 1; j >= 0; j--) {
+    if (isdigit(line[j]) > 0) {
+      second_numeric_value = get_numeric_value(&line[j]);
+      break;
+    }
+  }
+
+  return (10 * first_numeric_value) + (second_numeric_value);
 }
 
 int main() {
-  // TODO: Get the correct answer...
+  // Handle input file.
   char const *const fileName = FILENAME;
   FILE *fPtr = fopen(fileName, "r");
-  char buf[256];
-  int total = 0;
-  int line_val = 0;
 
-  while (read_line(fPtr, buf, 256) != -1) {
-    char *line = buf;
-    line_val = process_line(line);
-    total += line_val;
+  // Error handling for fileName.
+  if (!fPtr) {
+    fprintf(stderr, "Error opening %s\n", fileName);
+    exit(EXIT_FAILURE);
   }
 
-  // 55017 actual
-  printf("%d\n", total);
-  return 0;
+  // Char buffer for reading individual lines from file.
+  char buf[256];
+  // Part One of problem statement.
+  int part_1 = 0;
+  // Part Two of problem statement.
+  int part_2 = 0;
+
+  // Read a single line from file into buf, then process it
+  // to determine numeric value of each line, as provided
+  // by the problem spec.
+  while (read_line(fPtr, buf, 256) != -1) {
+    char *line = buf;
+    part_1 = process_line(line);
+  }
+
+  // Output first solution.
+  printf("day1 part1: %d\n", part_1);
+
+  // TODO: Solve
+  printf("day1 part 2: %d", part_2);
+  exit(EXIT_SUCCESS);
 }
