@@ -1,3 +1,5 @@
+// TODO: Break into multiple files, improve comments and variable
+// naming conventions, fix memset
 #include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
@@ -5,6 +7,11 @@
 #include <string.h>
 
 #define FILENAME "input.txt"
+
+// Function prototypes
+int read_line(FILE *, char *, size_t);
+int get_numeric_value(char *);
+int part_one(char *);
 
 // Read fPtr into char[256] buffer, return -1 on error.
 int read_line(FILE *f, char *buffer, size_t len) {
@@ -33,7 +40,7 @@ int get_numeric_value(char *line_idx) { return (int)*line_idx - 48; }
 
 // Process each line, and return the combined value of the first
 // and last integers of each line.
-int process_line(char *line) {
+int part_one(char *line) {
   // Length of string, subtract one to get index of last character.
   int string_len = strlen(line);
   int first_numeric_value = 0;
@@ -72,22 +79,29 @@ int main() {
   // Char buffer for reading individual lines from file.
   char buf[256];
   // Part One of problem statement.
-  int part_1 = 0;
+  int part_1_solution = 0;
   // Part Two of problem statement.
-  int part_2 = 0;
+  int part_2_solution = 0;
 
   // Read a single line from file into buf, then process it
   // to determine numeric value of each line, as provided
-  // by the problem spec.
+  // by the problem spec. Completes day_1.
   while (read_line(fPtr, buf, 256) != -1) {
     char *line = buf;
-    part_1 = process_line(line);
+    part_1_solution += part_one(line);
   }
 
+  // Read line from file into buff, perform search and replace
+  // operations, then process in same fashion as part_1.
+  // TODO: Implement.
+  // REWIND fPtr.
+  // Seach and Replace.
+  // Process.
+
   // Output first solution.
-  printf("day1 part1: %d\n", part_1);
+  printf("day1 part1: %d\n", part_1_solution);
 
   // TODO: Solve
-  printf("day1 part 2: %d", part_2);
+  printf("day1 part2: %d\n", part_2_solution);
   exit(EXIT_SUCCESS);
 }
