@@ -1,5 +1,5 @@
 // TODO: Break into multiple files, improve comments and variable
-// naming conventions, fix memset
+// naming conventions, fix memset.
 #include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
@@ -8,14 +8,16 @@
 
 #define FILENAME "input.txt"
 
-char *numbers[] = {"zero", "one", "two",   "three", "four",
-                   "five", "six", "seven", "eight", "nine"};
+char *substrings[] = {"zero", "one", "two",   "three", "four",
+                      "five", "six", "seven", "eight", "nine"};
+
+char *integers[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 // Function prototypes
 int read_line(FILE *, char *, size_t);
 int get_numeric_value(char *);
 int part_one(char *);
-void *str_replace(char *, char *);
+char *str_replace(char *, char *, char *);
 void str_search(char *, char *);
 
 // Read fPtr into char[256] buffer, return -1 on error.
@@ -70,10 +72,50 @@ int part_one(char *line) {
   return (10 * first_numeric_value) + (second_numeric_value);
 }
 
-void str_search(char *str, char *substr) {
-  for (size_t i = 0; i <= 10; i++) {
-    printf("%s\n", substr[i]);
+char *str_replace(char *orig, char *rep, char *with) {
+  char *result;  // the return string
+  char *ins;     // the next insert point
+  char *tmp;     // varies
+  int len_rep;   // length of rep (the string to remove)
+  int len_with;  // length of with (the string to replace rep with)
+  int len_front; // distance between rep and end of last rep
+  int count;     // number of replacements
+
+  // sanity checks and initialization
+  if (!orig || !rep)
+    return NULL;
+  len_rep = strlen(rep);
+  if (len_rep == 0)
+    return NULL; // empty rep causes infinite loop during count
+  if (!with)
+    with = "";
+  len_with = strlen(with);
+
+  // count the number of replacements needed
+  ins = orig;
+  for (count = 0; (tmp = strstr(ins, rep)); ++count) {
+    ins = tmp + len_rep;
   }
+
+  tmp = result = malloc(strlen(orig) + (len_with - len_rep) * count + 1);
+
+  if (!result)
+    return NULL;
+
+  // first time through the loop, all the variable are set correctly
+  // from here on,
+  //    tmp points to the end of the result string
+  //    ins points to the next occurrence of rep in orig
+  //    orig points to the remainder of orig after "end of rep"
+  while (count--) {
+    ins = strstr(orig, rep);
+    len_front = ins - orig;
+    tmp = strncpy(tmp, orig, len_front) + len_front;
+    tmp = strcpy(tmp, with) + len_with;
+    orig += len_front + len_rep; // move to next "end of rep"
+  }
+  strcpy(tmp, orig);
+  return result;
 }
 
 int main() {
@@ -107,10 +149,15 @@ int main() {
   // TODO: Implement.
   fseek(fPtr, 0, SEEK_SET);
   while (read_line(fPtr, buf, 256) != -1) {
-    char *line = buf;
-    // Search and replace.
-
-    // Process
+    char *str = buf;
+    for (int i = 0; i <= 10; i++) {
+      if (strstr(str, substrings[i]) != NULL) {
+        if ((str = str_replace(str, substrings[i], integers[i]))) {
+          printf("%s\n", str);
+          part_2_solution += part_one(str);
+        }
+      }
+    }
   }
 
   // Output first solution.

@@ -92,7 +92,8 @@ int main(void) {
                         "five", "six", "seven", "eight", "nine"};
   char *integers[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-  char *string = "56four4one2";
+  char *string;
+  scanf("%s", &*string);
 
   // Close but not quite right...
   for (int i = 0; i <= 10; i++) {
