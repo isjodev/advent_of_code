@@ -92,17 +92,22 @@ int main(void) {
                         "five", "six", "seven", "eight", "nine"};
   char *integers[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-  char *string;
-  scanf("%s", &*string);
+  char *string = "fiveaaahdfk34four0llll9fourfive";
 
   // Close but not quite right...
+  // Strips 0 from string?
+  // TODO: Debug
   for (int i = 0; i <= 10; i++) {
     if (strstr(string, substrings[i]) != NULL) {
       printf("current: %s\n", string);
       string = str_replace(string, substrings[i], integers[i]);
-      printf("new: %s\n", string);
-      // part_2_solution += part_one(string)
+      if (string == NULL) {
+        break;
+      } else {
+        printf("new: %s\n", string);
+      }
     }
+    // free(string);
   }
   return 0;
 }
