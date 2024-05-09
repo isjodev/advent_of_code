@@ -8,10 +8,15 @@
 
 #define FILENAME "input.txt"
 
+char *numbers[] = {"zero", "one", "two",   "three", "four",
+                   "five", "six", "seven", "eight", "nine"};
+
 // Function prototypes
 int read_line(FILE *, char *, size_t);
 int get_numeric_value(char *);
 int part_one(char *);
+void *str_replace(char *, char *);
+void str_search(char *, char *);
 
 // Read fPtr into char[256] buffer, return -1 on error.
 int read_line(FILE *f, char *buffer, size_t len) {
@@ -65,6 +70,12 @@ int part_one(char *line) {
   return (10 * first_numeric_value) + (second_numeric_value);
 }
 
+void str_search(char *str, char *substr) {
+  for (size_t i = 0; i <= 10; i++) {
+    printf("%s\n", substr[i]);
+  }
+}
+
 int main() {
   // Handle input file.
   char const *const fileName = FILENAME;
@@ -94,9 +105,13 @@ int main() {
   // Read line from file into buff, perform search and replace
   // operations, then process in same fashion as part_1.
   // TODO: Implement.
-  // REWIND fPtr.
-  // Seach and Replace.
-  // Process.
+  fseek(fPtr, 0, SEEK_SET);
+  while (read_line(fPtr, buf, 256) != -1) {
+    char *line = buf;
+    // Search and replace.
+
+    // Process
+  }
 
   // Output first solution.
   printf("day1 part1: %d\n", part_1_solution);
