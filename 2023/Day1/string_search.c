@@ -88,11 +88,20 @@ int main(void) {
   /*   char *line = buf; */
   /*   printf("%s\n", line); */
   /* } */
-  char *substrings[] = {"zero", "one", "two"};
+  char *substrings[] = {"zero", "one", "two",   "three", "four",
+                        "five", "six", "seven", "eight", "nine"};
+  char *integers[] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-  char *string = "zero145twonine";
-  char *new_string = str_replace(string, "zero", "0");
-  printf("%s\n", new_string);
+  char *string = "56four4one2";
 
+  // Close but not quite right...
+  for (int i = 0; i <= 10; i++) {
+    if (strstr(string, substrings[i]) != NULL) {
+      printf("current: %s\n", string);
+      string = str_replace(string, substrings[i], integers[i]);
+      printf("new: %s\n", string);
+      // part_2_solution += part_one(string)
+    }
+  }
   return 0;
 }
