@@ -1,5 +1,5 @@
 // TODO: Break into multiple files, improve comments and variable
-// naming conventions, fix memset.
+// naming conventions, fix memset, finish part2 solution.
 #include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
@@ -98,7 +98,7 @@ int part_two(char *line) {
   }
 
   if (addr_1 == addr_2) {
-    printf("%p %p ", addr_1, addr_2);
+    printf("%d %p %p\n", first_numeric_value, addr_1, addr_2);
     return first_numeric_value;
   } else {
     return (10 * first_numeric_value) + (second_numeric_value);
@@ -190,7 +190,6 @@ int main() {
     }
     int str_val = part_two(str);
     part_2_solution += str_val;
-    printf("%s %d\n", str, str_val);
   }
 
   // Output first solution.
