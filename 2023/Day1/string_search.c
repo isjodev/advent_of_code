@@ -97,7 +97,7 @@ int main(void) {
   // Close but not quite right...
   // Strips 0 from string?
   // TODO: Debug
-  for (int i = 0; i <= 10; i++) {
+  for (int i = 0; i < 10; i++) {
     if (strstr(string, substrings[i]) != NULL) {
       printf("current: %s\n", string);
       string = str_replace(string, substrings[i], integers[i]);
