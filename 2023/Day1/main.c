@@ -18,7 +18,6 @@ int read_line(FILE *, char *, size_t);
 int get_numeric_value(char *);
 int part_one(char *);
 char *str_replace(char *, char *, char *);
-void str_search(char *, char *);
 
 // Read fPtr into char[256] buffer, return -1 on error.
 int read_line(FILE *f, char *buffer, size_t len) {
@@ -70,6 +69,40 @@ int part_one(char *line) {
   }
 
   return (10 * first_numeric_value) + (second_numeric_value);
+}
+
+int part_two(char *line) {
+  // Length of string, subtract one to get index of last character.
+  int string_len = strlen(line);
+  int first_numeric_value = 0;
+  int second_numeric_value = 0;
+  char *addr_1 = NULL;
+  char *addr_2 = NULL;
+
+  // Get first numeric value from string.
+  for (int i = 0; i < string_len; i++) {
+    if (isdigit(line[i]) > 0) {
+      first_numeric_value = get_numeric_value(&line[i]);
+      addr_1 = (line + i);
+      break;
+    }
+  }
+
+  // Get second numeric value from string.
+  for (int j = string_len - 1; j >= 0; j--) {
+    if (isdigit(line[j]) > 0) {
+      second_numeric_value = get_numeric_value(&line[j]);
+      addr_2 = (line + j);
+      break;
+    }
+  }
+
+  if (addr_1 == addr_2) {
+    printf("%p %p ", addr_1, addr_2);
+    return first_numeric_value;
+  } else {
+    return (10 * first_numeric_value) + (second_numeric_value);
+  }
 }
 
 char *str_replace(char *orig, char *rep, char *with) {
@@ -150,20 +183,21 @@ int main() {
   fseek(fPtr, 0, SEEK_SET);
   while (read_line(fPtr, buf, 256) != -1) {
     char *str = buf;
-    for (int i = 0; i <= 10; i++) {
+    for (int i = 0; i < 10; i++) {
       if (strstr(str, substrings[i]) != NULL) {
-        if ((str = str_replace(str, substrings[i], integers[i]))) {
-          printf("%s\n", str);
-          part_2_solution += part_one(str);
-        }
+        str = str_replace(str, substrings[i], integers[i]);
       }
     }
+    int str_val = part_two(str);
+    part_2_solution += str_val;
+    printf("%s %d\n", str, str_val);
   }
 
   // Output first solution.
   printf("day1 part1: %d\n", part_1_solution);
 
   // TODO: Solve
+  // 53539
   printf("day1 part2: %d\n", part_2_solution);
   exit(EXIT_SUCCESS);
 }

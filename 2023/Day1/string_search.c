@@ -99,15 +99,9 @@ int main(void) {
   // TODO: Debug
   for (int i = 0; i < 10; i++) {
     if (strstr(string, substrings[i]) != NULL) {
-      printf("current: %s\n", string);
       string = str_replace(string, substrings[i], integers[i]);
-      if (string == NULL) {
-        break;
-      } else {
-        printf("new: %s\n", string);
-      }
     }
-    // free(string);
   }
+  printf("%s\n", string);
   return 0;
 }
