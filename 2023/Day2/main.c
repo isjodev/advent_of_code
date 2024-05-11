@@ -1,8 +1,15 @@
+#include <ctype.h>
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define FILENAME "input.txt"
+
+int read_line(FILE *, char *, size_t);
+void parse_line(char *line);
+int get_game_id(char *token);
+int get_numeric_value(char *line_idx) { return (int)*line_idx - 48; }
 
 int read_line(FILE *f, char *buffer, size_t len) {
   memset(buffer, 0, len);
@@ -24,6 +31,19 @@ int read_line(FILE *f, char *buffer, size_t len) {
   return -1;
 }
 
+int get_game_id(char *token) {
+  // Parse input string for string id.
+}
+
+void parse_line(char *line) {
+  char *token = strtok(line, ":");
+  while (token) {
+    printf("%s\n", token);
+    token = strtok(NULL, ";");
+  }
+  printf("\n");
+}
+
 int main(void) {
   // Handle input file.
   char const *const fileName = FILENAME;
@@ -36,9 +56,15 @@ int main(void) {
   }
 
   char buf[256];
+  char *line;
+  int game_id = 1;
   while (read_line(fPtr, buf, 256) != -1) {
-    // Do stuff...
+    line = buf;
+    printf("game_id: %d\n", game_id);
+    parse_line(line);
+    game_id++;
   }
 
+  printf("Done.\n");
   exit(EXIT_SUCCESS);
 }
