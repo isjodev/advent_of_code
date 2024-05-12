@@ -8,6 +8,7 @@
 
 #define FILENAME "input.txt"
 
+// Defining a linked list structure for storing file data.
 struct node {
   char *string;
   struct node *next;
@@ -18,13 +19,14 @@ typedef struct node Node;
 // Function prototypes.
 char *strdup(const char *);
 char *substr(char *, int, int);
-int get_game_id(char *s);
+int parse_game(char *s);
 void print_list(Node **);
 void deallocate(Node **);
 int read_line(FILE *, char *, size_t);
 int extract_str_id(char *);
 int day_two(Node **);
 
+// Duplicate source string.
 char *strdup(const char *src) {
   char *dst = malloc(strlen(src) + 1);
   if (dst == NULL)
@@ -33,6 +35,7 @@ char *strdup(const char *src) {
   return dst;
 }
 
+// Return the substring between indices and and y of source str s.
 char *substr(char *s, int x, int y) {
   char *ret = malloc(strlen(s) + 1);
   char *p = ret;
@@ -48,11 +51,13 @@ char *substr(char *s, int x, int y) {
   return ret;
 }
 
+// Returns the integer value contains in an ascii char between 0 - 9.
 int get_numeric_value(char *str_idx) {
-  // Return thing...
+  // Return...
   return (int)*str_idx - 48;
 }
 
+// Return integer value from string.
 int extract_str_id(char *str) {
   int str_len = strlen(str);
   int fnm = 0;
@@ -86,18 +91,41 @@ int extract_str_id(char *str) {
   }
 }
 
+int parse_for_num(char *str) {
+  char digits[256];
+
+  int sentinel = 0;
+  for (int i = 0; i < strlen(str); i++) {
+    if (isdigit(str[i])) {
+      digits[sentinel] = str[i];
+      sentinel++;
+    }
+  }
+  digits[sentinel + 1] = '\0';
+  return atoi(digits);
+}
+
+bool is_valid_game(char *s) {
+  printf("%s\n", s);
+
+  return 1;
+}
+
 // Return game ID if valid game, else return 0...
-int get_game_id(char *s) {
+int parse_game(char *s) {
   int idx_id_delimiter = (int)strcspn(s, ":");
   char *id_str = substr(s, 0, idx_id_delimiter);
-  int id = extract_str_id(id_str);
+  int id = parse_for_num(id_str);
 
-  char *token = strtok(s, ";");
-  while (token) {
-    printf("%s\n", token);
-    token = strtok(NULL, ",");
-  }
   printf("%d\n", id);
+  char *token = strtok(s, ":");
+  token = strtok(NULL, ";");
+  while (token) {
+    if (!is_valid_game(token)) {
+      return 0;
+    }
+    token = strtok(NULL, ";");
+  }
 
   return id;
 }
@@ -148,7 +176,7 @@ int day_two(Node **head) {
   Node *curr = *head;
   while (curr != NULL) {
     char *game_string = curr->string;
-    game_id = get_game_id(game_string);
+    game_id = parse_game(game_string);
     total += game_id;
     curr = curr->next;
   }
@@ -158,8 +186,10 @@ int day_two(Node **head) {
 
 int main(void) {
   // Handle input file.
+  int buf_len = 256;
   char const *const fileName = FILENAME;
   FILE *fPtr = fopen(fileName, "r");
+  char line[buf_len];
 
   // Error handling for fileName.
   if (!fPtr) {
@@ -167,12 +197,11 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
-  char line[256];
   Node *current, *head;
   head = current = NULL;
 
   // Read data from fPtr and store in linked list.
-  while (read_line(fPtr, line, 256) != -1) {
+  while (read_line(fPtr, line, buf_len) != -1) {
     Node *node = malloc(sizeof(Node));
     node->string = strdup(line);
     node->next = NULL;
@@ -187,7 +216,7 @@ int main(void) {
   // Work on list...
   int total = day_two(&head);
 
-  printf("%d\n", total);
+  printf("total: %d\n", total);
   deallocate(&head);
 
   // Close file pointer and return.
