@@ -128,7 +128,7 @@ int parse_game(char *s) {
   char *token = strtok(s, ":");
   token = strtok(NULL, ";");
   while (token) {
-    is_valid_game(token);
+    printf("%s\n", token);
     token = strtok(NULL, ";");
   }
 

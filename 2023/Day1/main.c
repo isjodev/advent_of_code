@@ -196,7 +196,7 @@ int main() {
   printf("day1 part1: %d\n", part_1_solution);
 
   // TODO: Solve
-  // 53539
+  // 53539 is correct answer
   printf("day1 part2: %d\n", part_2_solution);
   exit(EXIT_SUCCESS);
 }
