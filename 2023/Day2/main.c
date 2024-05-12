@@ -105,10 +105,17 @@ int parse_for_num(char *str) {
   return atoi(digits);
 }
 
-bool is_valid_game(char *s) {
-  printf("%s\n", s);
+void is_valid_game(char *s) {
+  int len = strlen(s);
 
-  return 1;
+  int sentinel = 0;
+  for (int i = 0; i <= strlen(s); i++) {
+    if (s[i] == ',') {
+      char *sub = substr(s, sentinel, i);
+      sentinel = i;
+      printf("substring: %s ", sub);
+    }
+  }
 }
 
 // Return game ID if valid game, else return 0...
@@ -121,9 +128,7 @@ int parse_game(char *s) {
   char *token = strtok(s, ":");
   token = strtok(NULL, ";");
   while (token) {
-    if (!is_valid_game(token)) {
-      return 0;
-    }
+    is_valid_game(token);
     token = strtok(NULL, ";");
   }
 
